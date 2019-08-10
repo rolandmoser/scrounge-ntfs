@@ -62,9 +62,9 @@ void ntfs_maketvs(uint64* ft, struct timeval* tv)
   /* Now convert the valid range of dates */
   else
   {
-    uint mod = (*ft % 1000000000);
-    tv->tv_sec = ((*ft - mod) / 1000000000);
-    tv->tv_usec = mod / 1000;
+    uint64 tmp = (*ft - UNIX_EPOCH)/10;
+    tv->tv_sec = tmp / 1000000;
+    tv->tv_usec = tmp % 1000000;
   }
 };
 
