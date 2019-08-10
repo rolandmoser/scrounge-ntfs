@@ -22,8 +22,8 @@
 #include "ntfs.h"
 
 const char kPrintData[]		= "\
-    Start Sector    End Sector      Cluster Size    MFT Offset    \n\
-==================================================================\n\
+    Start Sector    End Sector      Cluster Size    MFT Offset      MFT Mirr Offset\n\
+===================================================================================\n\
 ";
 
 const char kPrintDrive[]		= "\nDrive: %u\n";
@@ -53,11 +53,13 @@ int printNTFSInfo(int dd, uint64 tblSector)
 	if(!memcmp(boot->sysId, kNTFS_SysId, sizeof(boot->sysId)))
 	{
 #ifdef _WIN32
-		printf("%-15u %-15I64u", (unsigned int)boot->secPerClus,
-		       boot->offMFT * (uint64)boot->secPerClus);
+		printf("%-15u %-15I64u %-15I64u", (unsigned int)boot->secPerClus,
+		       boot->offMFT * (uint64)boot->secPerClus,
+		       boot->offMFTMirr * (uint64)boot->secPerClus);
 #else
-		printf("%-15u %-15llu", (unsigned int)boot->secPerClus,
-		       (unsigned long long)(boot->offMFT * (uint64)boot->secPerClus));
+		printf("%-15u %-15llu %-15llu", (unsigned int)boot->secPerClus,
+		       (unsigned long long)(boot->offMFT * (uint64)boot->secPerClus),
+		       (unsigned long long)(boot->offMFTMirr * (uint64)boot->secPerClus));
 #endif
 	}
 
